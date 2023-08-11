@@ -281,7 +281,7 @@ func (c *Client) Wait(resources ResourceList, timeout time.Duration) error {
 	}
 	checker := NewReadyChecker(cs, c.Log, PausedAsReady(true))
 	w := waiter{
-		c:       checker,
+		c: checker,
 		log: func(s string, i ...interface{}) {
 			fmt.Printf(s+"\n", i...)
 		},
@@ -342,13 +342,7 @@ func (c *Client) Build(reader io.Reader, validate bool) (ResourceList, error) {
 		validationDirective = metav1.FieldValidationStrict
 	}
 
-	dynamicClient, err := c.Factory.DynamicClient()
-	if err != nil {
-		return nil, err
-	}
-
-	verifier := resource.NewQueryParamVerifier(dynamicClient, c.Factory.OpenAPIGetter(), resource.QueryParamFieldValidation)
-	schema, err := c.Factory.Validator(validationDirective, verifier)
+	schema, err := c.Factory.Validator(validationDirective)
 	if err != nil {
 		return nil, err
 	}
@@ -368,13 +362,7 @@ func (c *Client) BuildTable(reader io.Reader, validate bool) (ResourceList, erro
 		validationDirective = metav1.FieldValidationStrict
 	}
 
-	dynamicClient, err := c.Factory.DynamicClient()
-	if err != nil {
-		return nil, err
-	}
-
-	verifier := resource.NewQueryParamVerifier(dynamicClient, c.Factory.OpenAPIGetter(), resource.QueryParamFieldValidation)
-	schema, err := c.Factory.Validator(validationDirective, verifier)
+	schema, err := c.Factory.Validator(validationDirective)
 	if err != nil {
 		return nil, err
 	}
